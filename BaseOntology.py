@@ -127,12 +127,6 @@ with onto :
     class DishesActivity(Activity):
         pass
 
-    class DressActivity(Activity):
-        pass
-
-    class GroomActivity(Activity):
-        pass
-
     class RelaxActivity(Activity):
         pass
 
@@ -142,16 +136,7 @@ with onto :
     class ToiletActivity(Activity):
         pass
 
-    class WorkActivity(Activity):
-        pass
-
     class ReadActivity(Activity):
-        pass
-
-    class RelaxActivity(Activity):
-        pass
-
-    class SleepActivity(Activity):
         pass
 
     class SleepOutOfBedActivity(Activity):
@@ -161,9 +146,6 @@ with onto :
         pass
 
     class TakeMedicineActivity(Activity):
-        pass
-
-    class ToiletActivity(Activity):
         pass
 
     class WashDishesActivity(Activity):

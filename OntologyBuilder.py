@@ -39,7 +39,7 @@ class OntologyBuilder(object):
 				sensors = {}
 
 				with open(self.anndata_filepath) as file: 
-					line_pattern = re.compile('^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+\s([A-Z]{1,2})([A-Z0-9]{3,5})*')
+					line_pattern = re.compile('^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+\s([A-Z]{1,2})([A-Z0-9]{3,6})*')
 
 					for line in file: 
 						tokens = line_pattern.search(line)
@@ -50,7 +50,7 @@ class OntologyBuilder(object):
 						name = tokens.group(1) + tokens.group(2)
 
 						if name not in sensors.keys(): 
-							sensors[name] = SENSOR_TYPE_TRANSLATION[tokens.group(1)](tokens.group(2))
+							sensors[name] = SENSOR_TYPE_TRANSLATION[tokens.group(1)](name)
 
 				return sensors
 
