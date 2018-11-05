@@ -4,7 +4,7 @@ from owlready2 import *
 DATE_REPRESENTATION = str
 # DATE_REPRESENTATION = datetime.datetime
 
-onto = get_ontology("file:///home/yop/Programmation/Recherche/wsu_datasets/ontology/hh101.owl")
+onto = get_ontology("file:///home/yop/Programmation/Recherche/wsu_datasets/ontology/BaseOntology.owl")
 
 with onto : 
 	class Sensor(Thing): 
