@@ -20,6 +20,8 @@ ROOT_PATH = os.path.abspath('/home/yop/Programmation/Recherche/wsu_datasets/data
 
 class OntologyBuilder(object): 
 	def __init__(self, dataset_name="hh101"):
+		super(OntologyBuilder, self).__init__()
+
 		self.dataset_name = dataset_name
 		self.dataset_path = os.path.join(ROOT_PATH, os.path.join(dataset_name, dataset_name))
 
@@ -105,7 +107,7 @@ class OntologyBuilder(object):
 					else: 
 						value = float(value_str)
 
-					sensor_events.append(Measure(sensor=self.sensors[name], value=value, timestamp=timestamp))
+					sensor_events.append(Measure(is_measured_by=self.sensors[name], value=value, timestamp=timestamp))
 
 					if tokens.group(6):
 						act_tokens = activity_pattern.search(tokens.group(6))
@@ -179,7 +181,7 @@ class OntologyBuilder(object):
 					else: 
 						value = float(value_str)
 
-					sensor_events.append(Measure(sensor=self.sensors[name], value=value, timestamp=timestamp))
+					sensor_events.append(Measure(is_measured_by=self.sensors[name], value=value, timestamp=timestamp))
 
 			self.testing_slice['start'] = starting_line
 			self.testing_slice['stop'] = starting_line + window_size

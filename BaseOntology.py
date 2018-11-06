@@ -1,12 +1,13 @@
-import datetime
 from owlready2 import *
 
 DATE_REPRESENTATION = str
+
+# import datetime
 # DATE_REPRESENTATION = datetime.datetime
 
-onto = get_ontology("file:///home/yop/Programmation/Recherche/wsu_datasets/ontology/BaseOntology.owl")
+baseOnto = get_ontology("file:///home/yop/Programmation/Recherche/wsu_datasets/ontology/BaseOntology.owl")
 
-with onto : 
+with baseOnto : 
     class Sensor(Thing): 
         pass
 
@@ -194,11 +195,11 @@ with onto :
         pass
 
     class embeds(Device >> Sensor, InverseFunctionalProperty):
-        python_name = "sensors"
+        python_name = "embeds"
         inverse_property = isEmbeddedBy
 
     class isMeasuredBy(Measure >> Sensor, FunctionalProperty): 
-        python_name = "sensor"
+        python_name = "is_measured_by"
 
     class hasTimeStamp(DataProperty, FunctionalProperty): 
         python_name = 'timestamp'
@@ -300,40 +301,6 @@ ACTIVITY_TYPE_TRANSLATION = {
     "Work_At_Table": WorkAtTableActivity,
     "Work_On_Computer": WorkOnComputerActivity,
 }
-
-
-# ACTIVITY_TYPE_TRANSLATION = {
-#   "Bathe":BathActivity, 
-#   "Bed_Toilet_Transition":BedToiletTransitionActivity, 
-#   "Cook": CookActivity, 
-#   "Cook_Breakfast": CookBreakfastActivity, 
-#   "Cook_Dinner": CookDinnerActivity,
-#   "Cook_Lunch": CookLunchActivity,
-#   "Dress": DressActivity, 
-#   "Eat": EatActivity,
-#   "Eat_Breakfast": EatBreakfastActivity,
-#   "Eat_Lunch": EatLunchActivity,
-#   "Eat_Dinner": EatDinnerActivity,
-#   "Enter_Home": EnterHomeActivity, 
-#   "Entertain_Guests": EntertainGuestsActivity,
-#   "Evening_Meds": TakeEveningMedsActivity, 
-#   "Groom":GroomActivity,
-#   "Leave_Home":LeaveHomeActivity,
-#   "Morning_Meds":TakeMorningMedsActivity,
-#   "Personal_Hygiene":PersonnalHygieneActivity,
-#   "Phone": PhoneActivity,
-#   "Read": ReadActivity,
-#   "Relax": RelaxActivity,
-#   "Sleep": SleepActivity,
-#   "Sleep_Out_Of_Bed": SleepOutOfBedActivity,
-#   "Toilet": ToiletActivity,
-#   "Wash_Dishes": WashDishesActivity,
-#   "Wash_Breakfast_Dishes": WashBreakfastDishesActivity,
-#   "Wash_Lunch_Dishes": WashLunchDishesActivity,
-#   "Wash_Dinner_Dishes": WashDinnerDishesActivity,
-#   "Watch_TV": WatchTVActivity,
-#   "Work_At_Table": WorkAtTableActivity
-# }
 
 MEASURE_TYPE_TRANSLATION = {
     'open': True, 
