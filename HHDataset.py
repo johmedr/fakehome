@@ -8,10 +8,12 @@ class HHDataset(object):
 	def __init__(self, dataset_name=None,  ontology_builder=None):
 		super(HHDataset, self).__init__()
 		
+		self.ontology_builder = ontology_builder
+
 		if dataset_name is None and ontology_builder is None:
 			raise AttributeError("Need to provide either dataset_name or ontology_builder !")
 		elif dataset_name is not None and ontology_builder is None:
-			if not isinstanced(dataset_name, str): 
+			if not isinstance(dataset_name, str): 
 				raise AttributeError("dataset_name must be a string !")
 			else: 
 				self.ontology_builder = OntologyBuilder(dataset_name)
@@ -19,13 +21,13 @@ class HHDataset(object):
 			if not isinstance(ontology_builder, OntologyBuilder): 
 				raise AttributeError("ontology_builder must be an instance of OntologyBuilder !")
 
-		self.ontology_builder = ontology_builder
 		# Assumption : dimension of sensor data is 1 
 
 		self._sensors_typelist = baseOnto.search(subclass_of=Sensor)
 		self._sensors_nfeatures = len(self._sensors_typelist)
 		self._time_nfeatures = 6
 		self.input_nfeatures = self._sensors_nfeatures + self._time_nfeatures
+
 		self._datetime_to_list = lambda date: [date.month, date.day, date.hour, date.minute, date.second, date.microsecond]
 
 	def _time_embedding(self, measurement_list): 
@@ -54,7 +56,7 @@ class HHDataset(object):
 		if normalize: 
 			input_embedding = np.nan_to_num(input_embedding / np.max(np.abs(input_embedding)))
 		return input_embedding
-		
+
 
 
 
