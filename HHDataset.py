@@ -49,13 +49,37 @@ class HHDataset(object):
 			]
 		) 
 
-	def input_embedding(self, measurement_list, normalize=True): 
+	def _input_embedding(self, measurement_list, normalize=True): 
 		data = self._data_embedding(measurement_list)
 		time = self._time_embedding(measurement_list)
 		input_embedding = np.concatenate((data, time), axis=1)
 		if normalize: 
 			input_embedding = np.nan_to_num(input_embedding / np.max(np.abs(input_embedding)))
 		return input_embedding
+
+	def _events_to_nodes_translmatrix(self, measurement_list): 
+		D = np.array(
+			[
+				[	
+					float(m.is_measured_by.is_a[0] == s) 
+					for s in self._sensors_typelist
+				] 
+				for m in measurement_list
+			]
+		) # Shape (S,M)
+
+		return np.nan_to_num(D / np.sum(D, axis=0)).T # Shape (M,S)
+
+	def get_training_inputs(self, window_size=100, starting_line=0, normalize=True):
+		raw_slice = self.ontology_builder.read_training_data(window_size=window_size, starting_line=starting_line)
+		I = self._input_embedding(raw_slice['sensor_events'], normalize=normalize)
+		D = self._events_to_nodes_translmatrix(raw_slice['sensor_events'])
+		return D.dot(I) # ??? 
+
+		
+
+
+
 
 
 
