@@ -16,8 +16,6 @@ TO_PARSE = [
 
 ROOT_PATH = os.path.abspath('/home/yop/Programmation/Recherche/wsu_datasets/data')
 
-
-
 class OntologyBuilder(object): 
 	def __init__(self, data_path=ROOT_PATH, dataset_name="hh101"):
 		super(OntologyBuilder, self).__init__()

@@ -5,7 +5,7 @@ DATE_REPRESENTATION = str
 # import datetime
 # DATE_REPRESENTATION = datetime.datetime
 
-baseOnto = get_ontology("file:///home/yop/Programmation/Recherche/wsu_datasets/ontology/BaseOntology.owl")
+baseOnto = get_ontology("file://wsu_datasets/hh/BaseOntology.owl")
 
 with baseOnto : 
     class Sensor(Thing): 
