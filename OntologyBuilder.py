@@ -19,11 +19,11 @@ ROOT_PATH = os.path.abspath('/home/yop/Programmation/Recherche/wsu_datasets/data
 
 
 class OntologyBuilder(object): 
-	def __init__(self, dataset_name="hh101"):
+	def __init__(self, data_path=ROOT_PATH, dataset_name="hh101"):
 		super(OntologyBuilder, self).__init__()
 
 		self.dataset_name = dataset_name
-		self.dataset_path = os.path.join(ROOT_PATH, os.path.join(dataset_name, dataset_name))
+		self.dataset_path = os.path.join(data_path, os.path.join(dataset_name, dataset_name))
 
 		self.anndata_filepath = os.path.join(self.dataset_path, 'ann.txt')
 		self.rawdata_filepath = os.path.join(self.dataset_path, 'rawdata.txt')
