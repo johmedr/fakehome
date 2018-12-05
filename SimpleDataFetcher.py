@@ -179,6 +179,11 @@ class SimpleDataFetcher(object):
 						elif activity_state == 'begin':
 							self.waiting_activities.add(activity_name)
 
+						else:
+
+							self.waiting_activities.add(activity_name)
+							raise Warning("Unseen activity '%s'"%activity_name)
+
 					else: 
 						activity_events[self.activity_dict[activity_name], line_num] = 1
 
