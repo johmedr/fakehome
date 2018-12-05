@@ -119,11 +119,12 @@ class SimpleDataFetcher(object):
 
 			return sensors_dict, sensors_typedict, sensors_nb + 1
 
-		self.sensors_dict, self.sensors_typedict, self.sensors_nb = extract_sensor_list()
+		self.sensors_dict, self.sensors_typedict	, self.sensors_nb = extract_sensor_list()
 
 		self.activity_nb = len(ACTIVITY_LIST)
 		self.activity_dict= {ACTIVITY_LIST[i]:i for i in range(self.activity_nb)}
 
+		self.waiting_activities = set()
 
 	def read_annotated_data(self, window_size=-1, starting_line=0): 
 		if window_size == -1: 
@@ -134,8 +135,6 @@ class SimpleDataFetcher(object):
 		sensor_events = np.zeros((self.sensors_nb, temporal_win))
 		activity_events = np.zeros((self.activity_nb, temporal_win))
 
-		# Store pending activities
-		waiting_activities = set()
 
 		with open(self.anndata_filepath) as file: 
 			line_pattern = re.compile('^([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+)\s([A-Z]{1,2})([A-Z0-9]{3,5})\s([A-Z0-9]+)(\s([A-Za-z].+))?')
@@ -175,15 +174,15 @@ class SimpleDataFetcher(object):
 					if act_tokens.group(3): 
 						activity_state = act_tokens.group(3).lower() 
 						if activity_state == 'end': 
-							waiting_activities.remove(activity_name)
+							self.waiting_activities.remove(activity_name)
 
 						elif activity_state == 'begin':
-							waiting_activities.add(activity_name)
+							self.waiting_activities.add(activity_name)
 
 					else: 
 						activity_events[self.activity_dict[activity_name], line_num] = 1
 
-				for name in waiting_activities: 
+				for name in self.waiting_activities: 
 					activity_events[self.activity_dict[name], line_num] = 1
 
 				line_num += 1
