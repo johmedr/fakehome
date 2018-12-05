@@ -74,7 +74,9 @@ class HHDataset(object):
 		raw_slice = self.ontology_builder.read_training_data(window_size=window_size, starting_line=starting_line)
 		I = self._input_embedding(raw_slice['sensor_events'], normalize=normalize)
 		D = self._events_to_nodes_translmatrix(raw_slice['sensor_events'])
-		return D.dot(I) # ??? 
+		return D.dot(I) # ??? Here some attention ? 
+
+	
 
 		
 
