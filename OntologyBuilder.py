@@ -1,7 +1,7 @@
 import os 
 import re
 import datetime
-from BaseOntology import *
+from .BaseOntology import *
 
 
 TO_PARSE = [

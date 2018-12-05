@@ -1,4 +1,4 @@
-from OntologyBuilder import *
+from .OntologyBuilder import *
 
 import numpy as np 
 
