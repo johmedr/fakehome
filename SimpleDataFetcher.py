@@ -133,7 +133,7 @@ class SimpleDataFetcher(object):
 			temporal_win = window_size
 
 		sensor_events = np.zeros((self.sensors_nb, temporal_win))
-		activity_events = np.zeros((self.activity_nb, temporal_win))
+		activity_events = np.zeros((self.activity_nb + 1, temporal_win))
 
 
 		with open(self.anndata_filepath) as file: 
@@ -191,6 +191,9 @@ class SimpleDataFetcher(object):
 
 				for name in self.waiting_activities: 
 					activity_events[self.activity_dict[name], line_num] = 1
+				if activity_events[:, line_num].sum() == 0: 
+					activity_events[-1, line_num] = 1
+					
 
 				line_num += 1
 
