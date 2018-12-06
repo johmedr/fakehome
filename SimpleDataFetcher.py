@@ -16,9 +16,9 @@ ROOT_PATH = os.path.abspath('/home/yop/Programmation/Recherche/wsu_datasets/data
 
 MEASURE_TYPE_TRANSLATION = {
     'open': 1, 
-    'close': -1, 
+    'close': 0, 
     'on': 1, 
-    'off': -1
+    'off': 0
 }
 
 
@@ -164,6 +164,8 @@ class SimpleDataFetcher(object):
 					value = float(value_str)
 
 				# Event = 1-hot valued vector   
+				if line_num > 0: 
+					sensor_events[:, line_num] = sensor_events[:, line_num - 1] 
 				sensor_events[self.sensors_dict[name], line_num] = value
 
 				if tokens.group(6):
