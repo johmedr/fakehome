@@ -1,6 +1,7 @@
 import os 
 import re
 import numpy as np
+import warnings
 
 TO_PARSE = [
 	'hh10%d'%i for i in range(1,10)
@@ -108,7 +109,7 @@ class SimpleDataFetcher(object):
 					tokens = line_pattern.search(line)
 
 					if not tokens: 
-						raise Warning("Unable to find data pattern on line %s"%line)
+						warnings.warn( "Unable to find data pattern on line %s"%line)
 
 					name = tokens.group(1) + tokens.group(2)
 
@@ -144,7 +145,7 @@ class SimpleDataFetcher(object):
 				lines = file.readlines()[starting_line:]
 			elif starting_line + window_size > self.ann_file_length: 
 				lines = file.readlines()[starting_line:]
-				raise Warning("Trying to read %d lines, but annotated data file contains %d lines."%(starting_line + window_size, self.ann_file_length))
+				warnings.warn("Trying to read %d lines, but annotated data file contains %d lines."%(starting_line + window_size, self.ann_file_length))
 			else: 
 				lines = file.readlines()[starting_line:starting_line+window_size]
 
@@ -185,7 +186,7 @@ class SimpleDataFetcher(object):
 						else:
 
 							self.waiting_activities.add(activity_name)
-							raise Warning("Unseen activity '%s'"%activity_name)
+							warnings.warn("Unseen activity '%s'"%activity_name)
 
 					else: 
 						activity_events[self.activity_dict[activity_name], line_num] = 1
@@ -221,7 +222,7 @@ class SimpleDataFetcher(object):
 	# 				lines = file.readlines()[starting_line:]
 	# 			elif starting_line + window_size > self.rawdata_file_length: 
 	# 				lines = file.readlines()[starting_line:]
-	# 				raise Warning("Trying to read %d lines, but annotated data file contains %d lines."%(starting_line + window_size, self.rawdata_file_length))
+	# 				warnings.warn("Trying to read %d lines, but annotated data file contains %d lines."%(starting_line + window_size, self.rawdata_file_length))
 	# 			else: 
 	# 				lines = file.readlines()[starting_line:starting_line+window_size]
 
