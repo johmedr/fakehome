@@ -175,7 +175,8 @@ class SimpleDataFetcher(object):
 
 					if act_tokens.group(3): 
 						activity_state = act_tokens.group(3).lower() 
-						if activity_state == 'end': 
+						if activity_state == 'end' and activity_name in self.waiting_activities: 
+
 							self.waiting_activities.remove(activity_name)
 
 						elif activity_state == 'begin':
