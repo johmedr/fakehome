@@ -113,3 +113,17 @@ class DatasetObject(object):
                 Returns the list of locations used in the dataset. 
         """
         DatasetObject._not_implemented_error()
+
+    @property
+    def filepath(self):
+        """ Property: filepath
+                Returns the absolute path to the data file. 
+        """
+        DatasetObject._not_implemented_error()
+
+    @property
+    def name(self):
+        """ Property: name
+                Returns the name of the dataset.
+        """
+        DatasetObject._not_implemented_error()
