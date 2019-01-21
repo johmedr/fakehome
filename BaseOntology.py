@@ -7,34 +7,34 @@ DATE_REPRESENTATION = str
 
 baseOnto = get_ontology("file://wsu_datasets/hh/BaseOntology.owl")
 
-with baseOnto : 
-    class Sensor(Thing): 
+with baseOnto:
+    class Sensor(Thing):
         pass
 
-    class BatterySensor(Sensor): 
+    class BatterySensor(Sensor):
         pass
 
-    class DoorSensor(Sensor): 
+    class DoorSensor(Sensor):
         pass
 
-    class LightSwitchSensor(Sensor): 
+    class LightSwitchSensor(Sensor):
         pass
 
     class LightSensor(Sensor):
-        pass 
+        pass
 
     class MotionSensor(Sensor):
         pass
 
-    class WideAreaMotionSensor(Sensor): 
+    class WideAreaMotionSensor(Sensor):
         pass
 
     class TemperatureSensor(Sensor):
         pass
 
-    class Activity(Thing): 
+    class Activity(Thing):
         pass
-        
+
     class BatheActivity(Activity):
         pass
 
@@ -176,20 +176,38 @@ with baseOnto :
     class WorkOnComputerActivity(WorkActivity):
         pass
 
-    class Device(Thing): 
+    class Device(Thing):
         pass
 
-    class Location(Thing): 
+    class Location(Thing):
         pass
 
-    class Measure(Thing): 
+    class KitchenLocation(Location):
+        pass
+
+    class LivingRoomLocation(Location):
+        pass
+
+    class BathroomLocation(Location):
+        pass
+
+    class BedroomLocation(Location):
+        pass
+
+    class EntranceLocation(Location):
+        pass
+
+    class Measure(Thing):
         pass
 
     class Property(Thing):
         pass
 
-    class hasLocation(Device >> Location, FunctionalProperty): 
-        python_name = "location"
+    class hasLocation(Device >> Location, FunctionalProperty):
+        python_name = "has_location"
+
+    class isAdjacentTo(Location >> Location):
+        python_name = "is_adjacent_to"
 
     class isEmbeddedBy(Sensor >> Device, FunctionalProperty):
         pass
@@ -198,10 +216,10 @@ with baseOnto :
         python_name = "embeds"
         inverse_property = isEmbeddedBy
 
-    class isMeasuredBy(Measure >> Sensor, FunctionalProperty): 
+    class isMeasuredBy(Measure >> Sensor, FunctionalProperty):
         python_name = "is_measured_by"
 
-    class hasTimeStamp(DataProperty, FunctionalProperty): 
+    class hasTimeStamp(DataProperty, FunctionalProperty):
         python_name = 'timestamp'
         domain = [Measure, Activity]
         range = [DATE_REPRESENTATION]
@@ -212,36 +230,40 @@ with baseOnto :
     class beginsAt(Activity >> DATE_REPRESENTATION, FunctionalProperty):
         python_name = 'begins_at'
 
-    class endsAt(Activity >> DATE_REPRESENTATION, FunctionalProperty): 
+    class endsAt(Activity >> DATE_REPRESENTATION, FunctionalProperty):
         python_name = 'ends_at'
 
     class takesPlaceIn(Activity >> Location):
         pass
 
-    class hasProperty(Location >> Property): 
+    class hasProperty(Location >> Property):
         pass
 
     class actsOn(Activity >> Property):
         pass
 
-    class correlatesWith(Sensor >> Property): 
-        pass
-
-
 SENSOR_TYPE_TRANSLATION = {
-    'BA':BatterySensor,
-    'D':DoorSensor,
-    'L':LightSwitchSensor,
-    'LL':LightSwitchSensor,
-    'LS':LightSensor,
-    'M':MotionSensor,
-    'MA':WideAreaMotionSensor,
-    'T':TemperatureSensor
+    'BA': BatterySensor,
+    'D': DoorSensor,
+    'L': LightSwitchSensor,
+    'LL': LightSwitchSensor,
+    'LS': LightSensor,
+    'M': MotionSensor,
+    'MA': WideAreaMotionSensor,
+    'T': TemperatureSensor
+}
+
+LOCATION_TYPE_TRANSLATION = {
+    'kitchen': KitchenLocation,
+    'living_room': LivingRoomLocation,
+    'bedroom': BedroomLocation,
+    'bathroom': BathroomLocation,
+    'entrance': EntranceLocation
 }
 
 ACTIVITY_EVENT = {
-    'begin':beginsAt, 
-    'end':endsAt, 
+    'begin': beginsAt,
+    'end': endsAt,
     None: hasTimeStamp
 }
 
@@ -277,7 +299,7 @@ ACTIVITY_TYPE_TRANSLATION = {
     "Phone": PhoneActivity,
     "Piano": PianoActivity,
     "Cook_Breakfast": CookBreakfastActivity,
-    "Dishes": WashDishesActivity, # CHANGED
+    "Dishes": WashDishesActivity,  # CHANGED
     "Dress": DressActivity,
     "Groom": GroomActivity,
     "Relax": RelaxActivity,
@@ -295,7 +317,7 @@ ACTIVITY_TYPE_TRANSLATION = {
     "Wash_Dinner_Dishes": WashDinnerDishesActivity,
     "Wash_Dishes": WashDishesActivity,
     "Wash_Lunch_Dishes": WashLunchDishesActivity,
-    "Watch_TV": WatchTVActivity, # CHANGED
+    "Watch_TV": WatchTVActivity,  # CHANGED
     "Work": WorkActivity,
     "Work_At_Desk": WorkAtDeskActivity,
     "Work_At_Table": WorkAtTableActivity,
@@ -303,11 +325,11 @@ ACTIVITY_TYPE_TRANSLATION = {
 }
 
 MEASURE_TYPE_TRANSLATION = {
-    'open': True, 
-    'close': False, 
-    'on': True, 
+    'open': True,
+    'close': False,
+    'on': True,
     'off': False
 }
 
-ROOMS_DESCRIPTION = { # To discover / self organization ? 
+ROOMS_DESCRIPTION = {  # To discover / self organization ?
 }
