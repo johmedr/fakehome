@@ -1,18 +1,19 @@
 import logging
+logger = logging.getLogger(__name__)
 
 
 class DatasetObject(object):
     """ DatasetObject """
 
     def __init__(self, *args, **kwargs):
-        logging.debug(
+        logger.debug(
             "DatasetObject's __init__() method was called. There is no need to call this method in subclasses.")
 
     @staticmethod
     def _not_implemented_error():
         e = NotImplementedError(
             "Subclasses of DatasetObject must override this method.")
-        logging.error(e)
+        logger.error(e)
         raise e
 
     def sensor_name_mapping(
@@ -66,10 +67,10 @@ class DatasetObject(object):
         """
         DatasetObject._not_implemented_error()
 
-    def location_name_mapping(
+    def location_type_mapping(
             self, location_name_str):
         """ location_type_mapping()
-                Takes the location name as a string extracted from the data file.
+                Takes the location name as a string.
                 Returns the associated type to build the ontology with.
 
                 If the location name contains information about its type, using regex and lookup table can be the simplest way to implement this function.
@@ -80,16 +81,50 @@ class DatasetObject(object):
         """
         DatasetObject._not_implemented_error()
 
+    def get_location_adjacency(
+            self, get_location_adjacency):
+        """ location_adjacency_mapping()
+                Takes the location name as a string.
+                Returns the list of adjacent locations to build the ontology with.
+
+                Example:
+
+                dataset_object.get_location_adjacency('bedroom') returns ['living_room', 'bathroom1'].
+        """
+        DatasetObject._not_implemented_error()
+
+    def get_location_sensors(
+            self, location_name_str):
+        """ get_location_sensors()
+                Takes the location name as a string.
+                Returns the list of adjacent locations to build the ontology with.
+
+                Example:
+
+                dataset_object.get_location_sensors('bedroom') returns ['D001', 'LS006'].
+        """
+
     def apply_line_pattern(self, line):
         """ apply_line_pattern
                 Takes a line from the data file as argument. 
-                Returns a dict containing the following keys:
-                    'sensor': the sensor name, 
-                    'state': the sensor state or value (as a string)
-                    'activity': the corresponding activity or None, 
-                    'activity_state': the corresponding activity state or None
+                Returns a dict containing the following structure:
+                {
+                    'timestamp': '...',
+                    'sensor': {
+                        'name':"...", 
+                        'type': TheConvertedInstantiableSensorType,
+                        'value': theConvertedValue
+                    }, 
+                    'activity': { 
+                        'name': "...",
+                        'type': TheConvertedInstantiableActivityType,
+                        'state': theConvertedActivityState
+                    }
+                }
 
+                activity can be None.
                 Using regex can be the simplest way to implement this function.
+                Make use of the mapping functions defined above.
         """
         DatasetObject._not_implemented_error()
 

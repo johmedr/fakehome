@@ -1,6 +1,6 @@
 {
 	"hh101": {
-		"datapath": "",
+		"datapath": "/home/yop/Programmation/Recherche/wsu_datasets/data/hh101/hh101/ann.txt",
 		"ontoref": "BaseOntology",
 		"locations": {
 			"type": {
@@ -69,13 +69,13 @@
 			    "Work": "WorkActivity",
 			    "Work_At_Desk": "WorkAtDeskActivity",
 			    "Work_At_Table": "WorkAtTableActivity",
-			    "Work_On_Computer": "WorkOnComputerActivity",
+			    "Work_On_Computer": "WorkOnComputerActivity"
 			}, 
 			"state": {
 			    "begin": "beginsAt",
 			    "end": "endsAt",
 			    "None": "hasTimeStamp"
-			}, 
+			}
 		},
 		"sensors": {
 			"type": {
@@ -105,7 +105,7 @@
 					"LS001",
 					"M001",
 					"T105",
-					"T104",
+					"T104"
 				], 
 				"kitchen":[		        
 					"MA016",
@@ -119,7 +119,7 @@
 					"LS006",
 					"LS007",
 					"M012",
-					"M006",
+					"M006"
 				],
 				"living_room":[
 					"LS008",
@@ -128,13 +128,13 @@
 					"LS005",
 					"M005",
 					"MA013",
-					"LS013",
+					"LS013"
 				],
 				"bathroom":[
 					"T103",
 					"D003",
 					"MA015",
-					"LS015",
+					"LS015"
 				],
 				"bedroom":[
 					"M009",
@@ -143,10 +143,8 @@
 		        	"M011",
 		        	"LS012",
 		        	"MA014",
-		        	"LS014",
+		        	"LS014"
 		        ]
-		        
-		       
 			}
 		}
 	}

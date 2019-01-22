@@ -1,3 +1,5 @@
-from .SimpleDataFetcher import SimpleDataFetcher
-from .HHDataset import *
-from .OntologyBuilder import *
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+from .datasets import *
+from .core import *

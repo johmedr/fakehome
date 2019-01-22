@@ -1,41 +1,53 @@
 from ..core import DatasetObject
-from ..core import BaseOntology
+from ..core.BaseOntology import *
 
 import json
-import logging
 import re
-
 import sys
+import os
+
+import logging
+logger = logging.getLogger(__name__)
 
 
-def str2ontoclass(str):
-    getattr(sys.modules[BaseOntology], str)
+def str2ontoclass(string):
+    try:
+        return getattr(sys.modules[__name__], string)
+    except TypeError as e:
+        s = "Wrong attribute type for str2ontoclass: must be a string, but get %s." % (
+            string,)
+        logger.error(s)
+        raise TypeError(s)
 
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
 
+DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), "hh_datasets_conf.json")
+
+
 class HHDatasetObject(DatasetObject):
 
     def __init__(
-            self, dataset_name="hh101", config_file="hh_dataset_conf.json"):
+            self, dataset_name="hh101", config_file=DEFAULT_CONFIG_FILE):
 
         self.dataset_name = dataset_name
         with open(config_file, 'r') as f:
-            logging.debug("Reading json config file '%s'...", config_file)
+            logger.debug("Reading json config file '%s'...", config_file)
             self.dataset_conf = json.load(f)
 
         try:
-            logging.debug("Extracting dataset '%s'...", dataset_name)
+            logger.debug("Extracting dataset '%s'...", dataset_name)
             self.dataset_conf = self.dataset_conf[self.dataset_name]
         except KeyError as e:
-            logging.error("Cannot find dataset with name: '%s'", dataset_name)
+            logger.error("Cannot find dataset with name: '%s'", dataset_name)
             raise e
 
         # TODO Check config file structure
         if self.dataset_conf["ontoref"] != "BaseOntology":
-            logging.error("Cannot handle different ontologies.")
+            logger.error("Cannot handle different ontologies.")
             raise NotImplementedError("Cannot handle different ontologies.")
 
         self.sensor_type_pattern = re.compile('([A-Z]{1,2})[0-9]+')
@@ -66,7 +78,17 @@ class HHDatasetObject(DatasetObject):
         except KeyError as e:
             s = "Cannot find sensor type for sensor with name '%s'" % (
                 sensor_name_str,)
-            logging.error(s)
+            logger.error(s)
+            raise KeyError(s)
+
+    def _sensor_type_mapping(
+            self, sensor_type_str):
+        try:
+            return str2ontoclass(self.dataset_conf['sensors']['type'][sensor_type_str])
+        except KeyError as e:
+            s = "Cannot find sensor type for sensor of type '%s'" % (
+                sensor_type_str,)
+            logger.error(s)
             raise KeyError(s)
 
     def sensor_state_mapping(
@@ -85,7 +107,7 @@ class HHDatasetObject(DatasetObject):
         except KeyError as e:
             s = "Cannot find sensor state for state '%s'" % (
                 sensor_state_str,)
-            logging.error(s)
+            logger.error(s)
             raise KeyError(s)
 
     def activity_type_mapping(
@@ -103,7 +125,7 @@ class HHDatasetObject(DatasetObject):
         except KeyError as e:
             s = "Cannot find activity type for activity with name '%s'" % (
                 activity_type_str,)
-            logging.error(s)
+            logger.error(s)
             raise KeyError(s)
 
     def activity_state_mapping(
@@ -122,13 +144,13 @@ class HHDatasetObject(DatasetObject):
         except KeyError as e:
             s = "Cannot find activity state for state '%s'" % (
                 activity_state_str,)
-            logging.error(s)
+            logger.error(s)
             raise KeyError(s)
 
-    def location_name_mapping(
+    def location_type_mapping(
             self, location_name_str):
         """ location_type_mapping()
-                Takes the location name as a string extracted from the data file.
+                Takes the location name as a string.
                 Returns the associated type to build the ontology with.
 
                 If the location name contains information about its type, using regex and lookup table can be the simplest way to implement this function.
@@ -142,36 +164,91 @@ class HHDatasetObject(DatasetObject):
         except KeyError as e:
             s = "Cannot find location type for location with name '%s'" % (
                 location_name_str,)
-            logging.error(s)
+            logger.error(s)
             raise KeyError(s)
+
+    def get_location_adjacency(
+            self, location_name_str):
+        """ get_location_adjacency()
+                Takes the location name as a string.
+                Returns the list of adjacent locations to build the ontology with.
+
+                Example:
+
+                dataset_object.get_location_adjacency('bedroom') returns ['living_room', 'bathroom1'].
+        """
+        try:
+            return list(self.dataset_conf['locations']['adjacency'][location_name_str])
+        except KeyError as e:
+            s = "Cannot find location adjacency for location with name '%s'" % (
+                location_name_str,)
+            logger.warning(s)
+            return []
+
+    def get_location_sensors(
+            self, location_name_str):
+        """ get_location_sensors()
+                Takes the location name as a string.
+                Returns the list of adjacent locations to build the ontology with.
+
+                Example:
+
+                dataset_object.get_location_sensors('bedroom') returns ['D001', 'LS006'].
+        """
+        try:
+            return self.dataset_conf['sensors']['locations'][location_name_str]
+        except KeyError as e:
+            s = "Cannot find sensor list for location with name '%s'" % (
+                location_name_str,)
+            logger.warning(s)
+            return []
 
     def apply_line_pattern(self, line):
         """ apply_line_pattern
-                Takes a line from the data file as argument. 
-                Returns a dict containing the following keys:
-                    'sensor': the sensor name, 
-                    'state': the sensor state or value (as a string)
-                    'activity': the corresponding activity or None, 
-                    'activity_state': the corresponding activity state or None
+                Takes a line from the data file as argument.
+                Returns a dict containing the following structure:
+                {
+                    'timestamp': '...',
+                    'sensor': {
+                        'name':"...",
+                        'type': TheConvertedInstantiableSensorType,
+                        'value': theConvertedValue
+                    },
+                    'activity': {
+                        'name': "...",
+                        'type': TheConvertedInstantiableActivityType,
+                        'state': theConvertedActivityState
+                    }
+                }
 
+                activity can be None.
                 Using regex can be the simplest way to implement this function.
+                Make use of the mapping functions defined above.
         """
         extracted = {}
         tokens = self.line_pattern.search(line)
 
         extracted['timestamp'] = tokens.group(1)
-        extracted['sensor'] = '%s%s' % (tokens.group(2), tokens.group(3))
-        extracted['state'] = tokens.group(4).lower()
+        extracted['sensor'] = {
+            'name': '%s%s' % (tokens.group(2), tokens.group(3)),
+            'type': self._sensor_type_mapping(tokens.group(2)),
+            'value': self.sensor_state_mapping(tokens.group(4).lower())
+        }
         extracted['activity'] = None
-        extracted['activity_state'] = None
 
         if tokens.group(6):
             act_tokens = self.activity_pattern.search(tokens.group(6))
 
-            extracted['activity'] = act_tokens.group(1)
+            extracted['activity'] = {
+                'name': act_tokens.group(1),
+                'type': self.activity_type_mapping(act_tokens.group(2)),
+                'state': None
+            }
 
             if act_tokens.group(3):
-                extracted['activity_state'] = act_tokens.group(3).lower()
+                act_state = act_tokens.group(3).lower()
+                if act_state != "none":
+                    extracted['activity']['state'] = act_state
 
         return extracted
 
