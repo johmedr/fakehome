@@ -1,3 +1,7 @@
 __pycache__/
-hh101.owl
-.data
+*.owl
+.data/
+dist/
+build/
+drafts/
+*.egg-info/
