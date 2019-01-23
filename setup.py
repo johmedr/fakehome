@@ -9,9 +9,9 @@ import os
 from setuptools import find_packages, setup
 
 # Package meta-data.
-NAME = 'etphone'
+NAME = 'fakehome'
 DESCRIPTION = ''
-URL = 'https://github.com/yop0/etphone'
+URL = 'https://github.com/yop0/fakehome'
 EMAIL = 'johan.medrano653@gmail.com'
 AUTHOR = 'Johan Medrano'
 REQUIRES_PYTHON = '>=3.6.0'
@@ -19,7 +19,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'owlready2', 'tqdm',
+    'owlready2', 'tqdm', 'wget'
 ]
 
 
@@ -45,7 +45,7 @@ if not VERSION:
     with open(os.path.join(here, NAME, '__version__.py')) as f:
         exec(f.read(), about)
 else:
-    about['__version__'] = '0.0.1'
+    about['__version__'] = VERSION
 
 
 # Where the magic happens:
@@ -60,15 +60,9 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=('tests',)),
-
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
-
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
-    install_requires=REQUIRED,
+    package_data={NAME: ['*_config.json']},
     include_package_data=True,
+    install_requires=REQUIRED,
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',

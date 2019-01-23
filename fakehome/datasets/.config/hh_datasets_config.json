@@ -1,6 +1,6 @@
 {
 	"hh101": {
-		"datapath": "/home/yop/Programmation/Recherche/wsu_datasets/data/hh101/hh101/ann.txt",
+		"datapath": "hh101/hh101/ann.txt",
 		"ontoref": "BaseOntology",
 		"locations": {
 			"type": {

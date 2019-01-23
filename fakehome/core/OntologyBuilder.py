@@ -128,21 +128,6 @@ class OntologyBuilder(object):
                     unit='lines',
                     dynamic_ncols=True
                 ):
-                    # if idx % print_q == 0:
-                    #     print(
-                    #         "Processing line {}/{} ({:2.1%}%)... {} errors so far ({:2.1%}%)...".format(
-                    #             idx + 1, num_lines, float(idx / num_lines),
-                    #             num_errors, float(num_errors / num_lines)
-                    #         ), end='\r'
-                    #     )
-                    # elif num_lines < 1000:
-                    #     print(
-                    #         "Processing line {}/{} ({:2.1%}%)... {} errors so far ({:2.1%}%)...".format(
-                    #             idx + 1, num_lines, float(idx / num_lines),
-                    #             num_errors, float(num_errors / num_lines)
-                    #         ), end='\r'
-                    #     )
-
                     try:
                         event = self.dataset.apply_line_pattern(line)
 
@@ -181,6 +166,7 @@ class OntologyBuilder(object):
                         activity_events.append(activity)
                 print("Ok ! Read %s lines out of %s..." %
                       (num_lines - num_errors, num_lines))
+
         self.training_slice['start'] = starting_line
         self.training_slice['stop'] = starting_line + window_size
         self.training_slice['sensor_events'] = sensor_events

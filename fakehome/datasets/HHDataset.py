@@ -23,23 +23,23 @@ def str2ontoclass(string):
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
-
 DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(
-    os.path.abspath(__file__)), "hh_datasets_conf.json")
+    os.path.abspath(__file__)), '.config', "hh_datasets_config.json")
 
 
 class HHDataset(DatasetObject):
 
     def __init__(
-            self, dataset_name="hh101", config_file=DEFAULT_CONFIG_FILE):
+            self, dataset_name, config_file=DEFAULT_CONFIG_FILE):
 
         self.dataset_name = dataset_name
         with open(config_file, 'r') as f:
             logger.debug("Reading json config file '%s'...", config_file)
             self.dataset_conf = json.load(f)
 
+        logger.debug(
+            "Extracting dataset configuration for '%s'...", dataset_name)
         try:
-            logger.debug("Extracting dataset '%s'...", dataset_name)
             self.dataset_conf = self.dataset_conf[self.dataset_name]
         except KeyError as e:
             logger.error("Cannot find dataset with name: '%s'", dataset_name)
@@ -47,8 +47,9 @@ class HHDataset(DatasetObject):
 
         # TODO Check config file structure
         if self.dataset_conf["ontoref"] != "BaseOntology":
-            logger.error("Cannot handle different ontologies.")
-            raise NotImplementedError("Cannot handle different ontologies.")
+            s = "Cannot handle different ontologies."
+            logger.error(s)
+            raise NotImplementedError(s)
 
         self.sensor_type_pattern = re.compile('([A-Z]{1,2})[0-9]+')
         self.line_pattern = re.compile(
@@ -284,7 +285,8 @@ class HHDataset(DatasetObject):
         """ Property: filepath
                 Returns the absolute path to the data file. 
         """
-        return self.dataset_conf['datapath']
+        return os.path.abspath(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.data', self.dataset_conf['datapath']))
 
     @property
     def name(self):
