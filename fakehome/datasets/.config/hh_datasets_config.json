@@ -484,6 +484,152 @@
 			    ]
 			}
 		}
+	},
+	"hh117": {
+		"datapath": "hh117/hh117/ann.txt",
+		"ontoref": "BaseOntology",
+		"locations": {
+			"type": {
+		        "kitchen":"KitchenLocation",
+		        "living_room":"LivingRoomLocation",
+			    "bedroom": "BedroomLocation",
+			    "bathroom": "BathroomLocation",
+			    "entrance": "EntranceLocation"
+			}, 
+			"adjacency": {
+				"kitchen": ["entrance"],
+				"living_room": ["entrance", "bedroom", "bathroom"],
+				"bathroom": ["entrance"]
+			}
+		},
+		"activities": {
+			"type": {
+				"Bathe": "BatheActivity",
+			    "Bed_Toilet_Transition": "BedToiletTransitionActivity",
+			    "Caregiver": "CaregiverActivity",
+			    "Cook": "CookActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Cook_Dinner": "CookDinnerActivity",
+			    "Cook_Lunch": "CookLunchActivity",
+			    "Dress": "DressActivity",
+			    "Drink": "DrinkActivity",
+			    "Drug_Management": "DrugManagementActivity",
+			    "Eat": "EatActivity",
+			    "Eat_Breakfast": "EatBreakfastActivity",
+			    "Eat_Dinner": "EatDinnerActivity",
+			    "Eat_Lunch": "EatLunchActivity",
+			    "Enter_Home": "EnterHomeActivity",
+			    "Entertain_Guests": "EntertainGuestsActivity",
+			    "Evening_Meds": "TakeEveningMedsActivity",
+			    "Exercise": "ExerciseActivity",
+			    "Housekeeping": "HousekeepingActivity",
+			    "Groceries": "GroceriesActivity",
+			    "Groom": "GroomActivity",
+			    "Laundry": "LaundryActivity",
+			    "Leave_Home": "LeaveHomeActivity",
+			    "Make_Bed": "MakeBedActivity",
+			    "Morning_Meds": "TakeMorningMedsActivity",
+			    "Paramedics": "ParamedicsActivity",
+			    "Personal_Hygiene": "PersonalHygieneActivity",
+			    "Phone": "PhoneActivity",
+				"Piano": "PianoActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Dishes": "WashDishesActivity", 
+			    "Dress": "DressActivity",
+			    "Groom": "GroomActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Toilet": "ToiletActivity",
+			    "Work": "WorkActivity",
+			    "Read": "ReadActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Sleep_Out_Of_Bed": "SleepOutOfBedActivity",
+			    "Step_Out": "StepOutActivity",
+			    "Take_Medicine": "TakeMedsActivity",
+			    "Toilet": "ToiletActivity",
+			    "Wash_Breakfast_Dishes": "WashBreakfastDishesActivity",
+			    "Wash_Dinner_Dishes": "WashDinnerDishesActivity",
+			    "Wash_Dishes": "WashDishesActivity",
+			    "Wash_Lunch_Dishes": "WashLunchDishesActivity",
+			    "Watch_TV": "WatchTVActivity", 
+			    "Work": "WorkActivity",
+			    "Work_At_Desk": "WorkAtDeskActivity",
+			    "Work_At_Table": "WorkAtTableActivity",
+			    "Work_On_Computer": "WorkOnComputerActivity"
+			}, 
+			"state": {
+			    "begin": "beginsAt",
+			    "end": "endsAt",
+			    "None": "hasTimeStamp"
+			}
+		},
+		"sensors": {
+			"type": {
+			    "BA": "BatterySensor",
+			    "D": "DoorSensor",
+			    "L": "LightSwitchSensor",
+			    "LL": "LightSwitchSensor",
+			    "LS": "LightSensor",
+			    "M": "MotionSensor",
+			    "MA": "WideAreaMotionSensor",
+			    "T": "TemperatureSensor"
+			},
+			"state": {
+			    "open": "True",
+			    "close": "False",
+			    "on": "True",
+			    "off": "False"
+			}, 
+			"locations": {
+		        "kitchen": [
+		        	"M010",
+		        	"LS010",
+		        	"MA013",
+		        	"LS013",
+		        	"LL002",
+		        	"L002",
+		        	"M009",
+		        	"LS009",
+		        	"T102",
+		        	"D003",
+		        	"D002"
+		        ],
+		        "living_room": [
+		        	"MA006",
+		        	"LS006",
+		        	"MA011",
+		        	"LS011",
+		        	"MA005",
+		        	"LS005",
+		        	"MA003",
+		        	"LS003"
+		        ],
+			    "entrance": [
+			    	"D004",
+			    	"T103",
+			    	"M004",
+			    	"LS004",
+			    	"L001",
+			    	"M012",
+			    	"LS012"
+			    ],
+			    "bathroom": [
+			    	"MA002",
+			    	"LS002",
+			    	"L003"
+			    ],
+			    "bedroom": [
+			    	"L004",
+			    	"D001",
+			    	"T101",
+			    	"MA001",
+			    	"LS001",
+			    	"MA007",
+			    	"LS007"
+			    ]
+			}
+		}
 	}
 	
 }

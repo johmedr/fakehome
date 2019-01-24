@@ -131,7 +131,7 @@ class OntologyBuilder(object):
                     try:
                         event = self.dataset.apply_line_pattern(line)
 
-                    except KeyError as e:
+                    except (KeyError, AttributeError) as e:
                         num_errors += 1
                         logger.debug(
                             "Get KeyError while attempting to read line %s of dataset %s. \
