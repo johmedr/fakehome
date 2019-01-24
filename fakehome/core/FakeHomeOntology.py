@@ -80,7 +80,6 @@ class FakeHomeOntology(object):
                 logger.debug("Processed sensor creation for location %s.", loc)
 
             self.training_slice = None
-            self._adjacency_matrix = None
 
             print("Ok !")
 
@@ -176,43 +175,6 @@ class FakeHomeOntology(object):
         self.training_slice['activity_events'] = activity_events
 
         return self.training_slice
-
-    def _build_adjacency_matrix(self):
-        nsensors = len(self._sensors)
-        nlocations = len(self._locations)
-        N = nsensors + nlocations
-
-        # Adjacency is an NxN matrix. The nsensors first elements ([0, nsensors - 1]) refer to
-        # sensors, and the nlocations remaining elements ([nsensors, N -
-        # 1]) refer to locations
-        adjacency = np.zeros((N, N), dtype=np.float)
-
-        # Sensors are stored in an (unordererd) dictionnary. We have to give
-        # a fixed ordering here
-        sensors_list = [self._sensors[k]
-                        for k in sorted(self._sensors.keys())]
-        # Same for the locations
-        locations_list = [self._locations[k]
-                          for k in sorted(self._locations.keys())]
-
-        for i, sensor in enumerate(sensors_list):
-            j = locations_list.index(sensor.has_location) + nsensors
-            adjacency[i, j] = 1.
-            adjacency[j, i] = 1.
-
-        for i, location in enumerate(locations_list):
-            i += nsensors
-            for other_location in location.is_adjacent_to:
-                j = locations_list.index(other_location) + nsensors
-                adjacency[i, j] = 1.
-
-        self._adjacency_matrix = adjacency
-
-    @property
-    def adjacency_matrix(self):
-        if self._adjacency_matrix is None:
-            self._build_adjacency_matrix()
-        return self._adjacency_matrix
 
     @property
     def sensors(self):
