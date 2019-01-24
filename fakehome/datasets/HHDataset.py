@@ -246,16 +246,16 @@ class HHDataset(DatasetObject):
         if tokens.group(6):
             act_tokens = self.activity_pattern.search(tokens.group(6))
 
+            if act_tokens.group(3):
+                act_state = act_tokens.group(3).lower()
+            else:
+                act_state = None
+
             extracted['activity'] = {
                 'name': act_tokens.group(1),
                 'type': self.activity_type_mapping(act_tokens.group(2)),
-                'state': None
+                'state': self.activity_state_mapping(act_state)
             }
-
-            if act_tokens.group(3):
-                act_state = act_tokens.group(3).lower()
-                if act_state != "none":
-                    extracted['activity']['state'] = act_state
 
         return extracted
 
