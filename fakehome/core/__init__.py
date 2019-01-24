@@ -1,3 +1,3 @@
 from .BaseOntology import *
 from .DatasetObject import DatasetObject
-from .OntologyBuilder import OntologyBuilder
+from .FakeHomeOntology import FakeHomeOntology
