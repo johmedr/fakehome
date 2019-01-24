@@ -1,6 +1,8 @@
 import networkx as nx
 import numpy as np
 
+from scipy.linalg import fractional_matrix_power
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -42,6 +44,25 @@ def adjacency_from_ontology(fakehomeontology):
     return adjacency, sensors_list, locations_list
 
 
+def normalize_adjacency(A, symmetric=True):
+    """ normalize_adjacency
+        Computes the normalized adjacency matrix, either using symmetric 
+        or asymmetric normalization. 
+        Please note that the Moore-Penrose pseudo-inverse is used instead of 
+        a straight inverse.  
+    """
+    D = np.diag(np.sum(A, axis=0))
+    D_1 = np.linalg.pinv(D)
+
+    if symmetric:
+        D_12 = fractional_matrix_power(D_1, 0.5)
+        A_norm = D_12.dot(A).dot(D_12)
+    else:
+        A_norm = D_1.dot(A)
+
+    return A_norm
+
+
 class FakeHomeGraph(nx.Graph):
 
     def __init__(self, ontology=None, **attr):
@@ -58,6 +79,18 @@ class FakeHomeGraph(nx.Graph):
         self._nlocations = len(self._locations_list)
         self._N = self._adjacency.shape[0]
 
+        # A ordering for the nodes' features is obtained here
+        self._features_list = list(set(type(e)
+                                       for e in self._sensors_list + self._locations_list))
+        self._F = len(self._features_list)
+
+        # One-hot coding of the location
+        self._locations_features = np.zeros(
+            (self._nlocations, self._F), dtype=np.float)
+        for i, loc in enumerate(self._locations_list):
+            j = self._features_list.index(type(loc))
+            self._locations_features[i, j] = 1.0
+
         super(FakeHomeGraph, self).__init__(self._adjacency, **attr)
 
         for idx, sensor in enumerate(self._sensors_list):
@@ -68,6 +101,9 @@ class FakeHomeGraph(nx.Graph):
             self.node[idx + self._nsensors]['name'] = loc.name
             self.node[
                 idx + self._nsensors]['instance'] = loc
+
+        self._normalized_adjacency = None
+        self._laplacian = None
 
     def draw(self, pos=None):
         if pos is None:
@@ -94,4 +130,55 @@ class FakeHomeGraph(nx.Graph):
             font_size=10
         )
 
-        # return nx.draw(self, with_labels=True, labels=labeldict)
+    def events_to_nodes_features(self, events):
+        if not isinstance(events, dict) or not 'sensor_events' in events.keys():
+            raise AttributeError()
+
+        measures = events["sensor_events"]
+        X = np.zeros((self._N, self._F, len(measures)), dtype=np.float)
+
+        # The locations will remain unchanged during the process
+        X[self._nsensors:, :, 0] = self._locations_features
+
+        for idx, measure in enumerate(measures):
+            # Ensure temporal consistence
+            if idx > 0:
+                X[:, :, idx] = X[:, :, idx - 1]
+
+            # Assign sensor value
+            sensor = measure.is_measured_by
+            feature = type(sensor)
+            i = self._sensors_list.index(sensor)
+            j = self._features_list.index(feature)
+            X[i, j, idx] = measure.value
+
+        return X
+
+    def read_data(self, window_size=-1, starting_line=0):
+        events = self._ontology.read_data(window_size, starting_line)
+        return self.events_to_nodes_features(events)
+
+    @property
+    def adjacency(self):
+        return self._adjacency
+
+    @property
+    def N(self):
+        return self._N
+
+    @property
+    def F(self):
+        return self._F
+
+    @property
+    def symnorm_adjacency(self):
+        if self._normalized_adjacency is None:
+            self._normalized_adjacency = normalize_adjacency(
+                self._adjacency, symmetric=True)
+        return self._normalized_adjacency
+
+    @property
+    def normalized_laplacian(self):
+        if self._laplacian is None:
+            self._laplacian = np.eye(self._N) - self.symnorm_adjacency
+        return self._laplacian

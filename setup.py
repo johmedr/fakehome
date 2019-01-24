@@ -19,7 +19,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'owlready2', 'tqdm', 'wget'
+    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy'
 ]
 
 
