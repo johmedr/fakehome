@@ -179,6 +179,18 @@ with baseOnto:
     class Location(Thing):
         pass
 
+    class DiningRoomLocation(Location):
+        pass
+
+    class WorkAreaLocation(Location):
+        pass
+
+    class CorridorLocation(Location):
+        pass
+
+    class DressingLocation(Location):
+        pass
+
     class KitchenLocation(Location):
         pass
 

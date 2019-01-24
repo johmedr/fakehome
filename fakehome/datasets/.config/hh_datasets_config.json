@@ -149,9 +149,341 @@
 		}
 	}, 
 	"hh102": {
-
+		"datapath": "hh102/hh102/ann.txt",
+		"ontoref": "BaseOntology",
+		"locations": {
+			"type": {
+		        "kitchen":"KitchenLocation",
+		        "dining_room":"DiningRoomLocation",
+		        "living_room":"LivingRoomLocation",
+			    "bedroom": "BedroomLocation",
+			    "bathroom1": "BathroomLocation",
+			    "bathroom2": "BathroomLocation",
+			    "entrance": "EntranceLocation",
+			    "work_area": "WorkAreaLocation",
+			    "corridor": "CorridorLocation"
+			}, 
+			"adjacency": {
+				"kitchen": ["dining_room"],
+				"dining_room": ["living_room", "entrance"],
+				"entrance": ["bathroom1"],
+				"living_room": ["work_area"],
+				"work_area": ["corridor"], 
+				"corridor": ["bathroom2", "bedroom"]
+			}
+		},
+		"activities": {
+			"type": {
+				"Bathe": "BatheActivity",
+			    "Bed_Toilet_Transition": "BedToiletTransitionActivity",
+			    "Caregiver": "CaregiverActivity",
+			    "Cook": "CookActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Cook_Dinner": "CookDinnerActivity",
+			    "Cook_Lunch": "CookLunchActivity",
+			    "Dress": "DressActivity",
+			    "Drink": "DrinkActivity",
+			    "Drug_Management": "DrugManagementActivity",
+			    "Eat": "EatActivity",
+			    "Eat_Breakfast": "EatBreakfastActivity",
+			    "Eat_Dinner": "EatDinnerActivity",
+			    "Eat_Lunch": "EatLunchActivity",
+			    "Enter_Home": "EnterHomeActivity",
+			    "Entertain_Guests": "EntertainGuestsActivity",
+			    "Evening_Meds": "TakeEveningMedsActivity",
+			    "Exercise": "ExerciseActivity",
+			    "Housekeeping": "HousekeepingActivity",
+			    "Groceries": "GroceriesActivity",
+			    "Groom": "GroomActivity",
+			    "Laundry": "LaundryActivity",
+			    "Leave_Home": "LeaveHomeActivity",
+			    "Make_Bed": "MakeBedActivity",
+			    "Morning_Meds": "TakeMorningMedsActivity",
+			    "Paramedics": "ParamedicsActivity",
+			    "Personal_Hygiene": "PersonalHygieneActivity",
+			    "Phone": "PhoneActivity",
+				"Piano": "PianoActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Dishes": "WashDishesActivity", 
+			    "Dress": "DressActivity",
+			    "Groom": "GroomActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Toilet": "ToiletActivity",
+			    "Work": "WorkActivity",
+			    "Read": "ReadActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Sleep_Out_Of_Bed": "SleepOutOfBedActivity",
+			    "Step_Out": "StepOutActivity",
+			    "Take_Medicine": "TakeMedsActivity",
+			    "Toilet": "ToiletActivity",
+			    "Wash_Breakfast_Dishes": "WashBreakfastDishesActivity",
+			    "Wash_Dinner_Dishes": "WashDinnerDishesActivity",
+			    "Wash_Dishes": "WashDishesActivity",
+			    "Wash_Lunch_Dishes": "WashLunchDishesActivity",
+			    "Watch_TV": "WatchTVActivity", 
+			    "Work": "WorkActivity",
+			    "Work_At_Desk": "WorkAtDeskActivity",
+			    "Work_At_Table": "WorkAtTableActivity",
+			    "Work_On_Computer": "WorkOnComputerActivity"
+			}, 
+			"state": {
+			    "begin": "beginsAt",
+			    "end": "endsAt",
+			    "None": "hasTimeStamp"
+			}
+		},
+		"sensors": {
+			"type": {
+			    "BA": "BatterySensor",
+			    "D": "DoorSensor",
+			    "L": "LightSwitchSensor",
+			    "LL": "LightSwitchSensor",
+			    "LS": "LightSensor",
+			    "M": "MotionSensor",
+			    "MA": "WideAreaMotionSensor",
+			    "T": "TemperatureSensor"
+			},
+			"state": {
+			    "open": "True",
+			    "close": "False",
+			    "on": "True",
+			    "off": "False"
+			}, 
+			"locations": {
+		        "kitchen": [
+		        	"D005",
+		        	"D006",
+		        	"T105",
+		        	"LS008",
+		        	"M008",
+		        	"LS007",
+		        	"M007"
+		        ],
+		        "dining_room": [
+		        	"M005",
+		        	"LS005",
+		        	"M006",
+		        	"LS006",
+		        	"M004",
+		        	"LS004"
+		        ],
+		        "living_room": [
+		        	"MA010",
+		        	"LS010",
+		        	"M011",
+		        	"LS011"
+		        ],
+			    "entrance": [
+			    	"L001",
+			    	"LS001",
+			    	"M001",
+			    	"LS002",
+			    	"M002",
+			    	"LS003",
+			    	"M003",
+			    	"T102",
+			    	"D002"
+			    ],
+			    "bathroom1": [
+			    	"T103",
+			    	"D003",
+			    	"MA009",
+			    	"LS009",
+			    	"L002"
+			    ],
+			    "bathroom2": [
+			    	"MA013",
+			    	"LS013",
+			    	"L003",
+			    	"T104",
+			    	"D004"
+			    ],
+			    "work_area": [
+			    	"M012",
+			    	"L012",
+			    	"L004",
+			    	"MA014",
+			    	"LS014", 
+			    	"M015",
+			    	"LS015", 
+			    	"D001",
+			    	"T101", 
+			    	"M016", 
+			    	"LS016"
+			    ],
+			    "corridor": [
+			    	"M017", 
+			    	"LS017",
+			    	"M018", 
+			    	"LS018",
+			    	"M019", 
+			    	"LS019"
+			    ],
+			    "bedroom": [
+			    	"L005",
+			    	"M021",
+			    	"LS021",
+			    	"M022", 
+			    	"LS022",
+			    	"MA020", 
+			    	"LS020",
+			    	"MA023", 
+			    	"LS023"
+			    ]
+			}
+		}
 	}, 
 	"hh103": {
-		
+		"datapath": "hh103/hh103/ann.txt",
+		"ontoref": "BaseOntology",
+		"locations": {
+			"type": {
+		        "kitchen":"KitchenLocation",
+		        "living_room":"LivingRoomLocation",
+			    "bedroom": "BedroomLocation",
+			    "bathroom": "BathroomLocation",
+			    "entrance": "EntranceLocation",
+			    "dressing": "DressingLocation"
+			}, 
+			"adjacency": {
+				"kitchen": ["living_room"],
+				"living_room": ["bathroom", "bedroom", "entrance"],
+				"bedroom": ["dressing"]
+			}
+		},
+		"activities": {
+			"type": {
+				"Bathe": "BatheActivity",
+			    "Bed_Toilet_Transition": "BedToiletTransitionActivity",
+			    "Caregiver": "CaregiverActivity",
+			    "Cook": "CookActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Cook_Dinner": "CookDinnerActivity",
+			    "Cook_Lunch": "CookLunchActivity",
+			    "Dress": "DressActivity",
+			    "Drink": "DrinkActivity",
+			    "Drug_Management": "DrugManagementActivity",
+			    "Eat": "EatActivity",
+			    "Eat_Breakfast": "EatBreakfastActivity",
+			    "Eat_Dinner": "EatDinnerActivity",
+			    "Eat_Lunch": "EatLunchActivity",
+			    "Enter_Home": "EnterHomeActivity",
+			    "Entertain_Guests": "EntertainGuestsActivity",
+			    "Evening_Meds": "TakeEveningMedsActivity",
+			    "Exercise": "ExerciseActivity",
+			    "Housekeeping": "HousekeepingActivity",
+			    "Groceries": "GroceriesActivity",
+			    "Groom": "GroomActivity",
+			    "Laundry": "LaundryActivity",
+			    "Leave_Home": "LeaveHomeActivity",
+			    "Make_Bed": "MakeBedActivity",
+			    "Morning_Meds": "TakeMorningMedsActivity",
+			    "Paramedics": "ParamedicsActivity",
+			    "Personal_Hygiene": "PersonalHygieneActivity",
+			    "Phone": "PhoneActivity",
+				"Piano": "PianoActivity",
+			    "Cook_Breakfast": "CookBreakfastActivity",
+			    "Dishes": "WashDishesActivity", 
+			    "Dress": "DressActivity",
+			    "Groom": "GroomActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Toilet": "ToiletActivity",
+			    "Work": "WorkActivity",
+			    "Read": "ReadActivity",
+			    "Relax": "RelaxActivity",
+			    "Sleep": "SleepActivity",
+			    "Sleep_Out_Of_Bed": "SleepOutOfBedActivity",
+			    "Step_Out": "StepOutActivity",
+			    "Take_Medicine": "TakeMedsActivity",
+			    "Toilet": "ToiletActivity",
+			    "Wash_Breakfast_Dishes": "WashBreakfastDishesActivity",
+			    "Wash_Dinner_Dishes": "WashDinnerDishesActivity",
+			    "Wash_Dishes": "WashDishesActivity",
+			    "Wash_Lunch_Dishes": "WashLunchDishesActivity",
+			    "Watch_TV": "WatchTVActivity", 
+			    "Work": "WorkActivity",
+			    "Work_At_Desk": "WorkAtDeskActivity",
+			    "Work_At_Table": "WorkAtTableActivity",
+			    "Work_On_Computer": "WorkOnComputerActivity"
+			}, 
+			"state": {
+			    "begin": "beginsAt",
+			    "end": "endsAt",
+			    "None": "hasTimeStamp"
+			}
+		},
+		"sensors": {
+			"type": {
+			    "BA": "BatterySensor",
+			    "D": "DoorSensor",
+			    "L": "LightSwitchSensor",
+			    "LL": "LightSwitchSensor",
+			    "LS": "LightSensor",
+			    "M": "MotionSensor",
+			    "MA": "WideAreaMotionSensor",
+			    "T": "TemperatureSensor"
+			},
+			"state": {
+			    "open": "True",
+			    "close": "False",
+			    "on": "True",
+			    "off": "False"
+			}, 
+			"locations": {
+		        "kitchen": [
+		        	"L005",
+		        	"MA006",
+		        	"LS006"
+		        ],
+		        "living_room": [
+		        	"L004",
+		        	"M005",
+		        	"LS005",
+		        	"MA004",
+		        	"LS004",
+		        	"MA003",
+		        	"LS003",
+		        	"MA007",
+		        	"LS007"
+		        ],
+			    "entrance": [
+			    	"LS001",
+			    	"M001",
+			    	"LS002",
+			    	"M002",
+			    	"T102",
+			    	"D002"
+			    ],
+			    "bathroom": [
+			    	"T103",
+			    	"D003",
+			    	"MA008",
+			    	"LS008",
+			    	"L001"
+			    ],
+			    "corridor": [
+			    	"M017", 
+			    	"LS017",
+			    	"M018", 
+			    	"LS018",
+			    	"M019", 
+			    	"LS019"
+			    ],
+			    "bedroom": [
+			    	"MA009",
+			    	"LS009",
+			    	"L002"
+			    ], 
+			    "dressing": [
+			    	"L003",
+			    	"MA010",
+			    	"LS010"
+			    ]
+			}
+		}
 	}
+	
 }

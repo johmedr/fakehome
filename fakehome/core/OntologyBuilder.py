@@ -161,7 +161,7 @@ class OntologyBuilder(object):
                         # Assign the timestamp to the data property
                         # corresponding to the event, e.g. beginsAt
                         activity.__setattr__(
-                            activity_state.python_name, event['timestamp'])
+                            event['activity']['state'].python_name, event['timestamp'])
 
                         activity_events.append(activity)
                 print("Ok ! Read %s lines out of %s..." %

@@ -253,7 +253,7 @@ class HHDataset(DatasetObject):
 
             extracted['activity'] = {
                 'name': act_tokens.group(1),
-                'type': self.activity_type_mapping(act_tokens.group(2)),
+                'type': self.activity_type_mapping(act_tokens.group(1)),
                 'state': self.activity_state_mapping(act_state)
             }
 
