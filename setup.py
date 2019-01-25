@@ -19,9 +19,13 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy', 'mayavi', 'matplotlib'
+    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy', 'matplotlib'
 ]
 
+
+EXTRAS = {
+    'draw3d': ['mayavi'],
+}
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -63,6 +67,7 @@ setup(
     package_data={NAME: ['*_config.json']},
     include_package_data=True,
     install_requires=REQUIRED,
+    extras_requires=EXTRAS,
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',

@@ -3,9 +3,6 @@ import numpy as np
 
 from scipy.linalg import fractional_matrix_power
 
-from mayavi import mlab
-from matplotlib.colors import to_rgba
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -133,28 +130,38 @@ class FakeHomeGraph(nx.Graph):
             font_size=10
         )
 
-    def draw3d(self, graph_colormap='winter', bgcolor=(1, 1, 1),
+    def draw3d(self, bgcolor=(1, 1, 1),
                node_size=10.,
                edge_color=(0.8, 0.8, 0.8), edge_size=1.,
-               text_size=0.05, text_color=(0, 0, 0)):
+               text_size=0.075, text_color=(0, 0, 0)):
+        try:
+            from mayavi import mlab
+            from matplotlib.colors import to_rgba
+
+        except ImportError as e:
+            logger.error("Cannot use draw3d without mayavi.")
+            raise e
 
         graph_pos = nx.nx_agraph.graphviz_layout(self)
-        #graph_pos = nx.spring_layout(G, dim=3)
 
         # numpy array of x,y,z positions in sorted node order
         xyz = np.array([graph_pos[v] + (0,) for v in sorted(self)])
 
+        # Clear figure
         mlab.figure(1, bgcolor=bgcolor)
         mlab.clf()
 
+        # Setup 2 different layers, for sensors and locations
         xyz[:self._nsensors, 2] = 0.
         xyz[self._nsensors:, 2] = 60.
 
+        # Create points
         pts = mlab.points3d(xyz[:, 0], xyz[:, 1], xyz[:, 2], range(self._N),
                             scale_factor=node_size,
                             scale_mode='none',
                             resolution=20)
 
+        # Setup a lookup table for colors
         node_color = [to_rgba('lightseagreen') if i <
                       self._nsensors else to_rgba('indianred') for i in self.nodes()]
         node_color = [[int(c * 255) for c in t] for t in node_color]
@@ -163,19 +170,25 @@ class FakeHomeGraph(nx.Graph):
             0, 255)
         pts.module_manager.scalar_lut_manager.lut.table = node_color
 
-        #----------------------------------------------------------------------
+        # Add labels with different size for locations and sensors names
         labels = {i: self.node[i]['name'].replace(
-            "location", "").replace('1', '') for i in self.nodes()}
-        for i, (x, y, z) in enumerate(xyz):
-            label = mlab.text(x, y, labels[i], z=z,
-                              width=text_size, name=labels[i], color=text_color)
-            label.property.shadow = True
+            "location", "") for i in self.nodes()}
 
+        for i, (x, y, z) in enumerate(xyz):
+            if i < self._nsensors:
+                mlab.text(x, y, labels[i], z=z,
+                          width=text_size, name=labels[i], color=text_color)
+            else:
+                mlab.text(x, y, labels[i], z=z,
+                          width=text_size * 4, name=labels[i], color=text_color)
+
+        # Add edges
         pts.mlab_source.dataset.lines = np.array(self.edges())
         tube = mlab.pipeline.tube(pts, tube_radius=edge_size)
         mlab.pipeline.surface(tube, color=edge_color)
 
-        mlab.show()  # interactive window
+        # Visualize with mayavi
+        mlab.show()
 
     def events_to_nodes_features(self, events):
         if not isinstance(events, dict) or not 'sensor_events' in events.keys():
