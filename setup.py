@@ -49,7 +49,7 @@ setup(
     package_data={NAME: ['*_config.json']},
     include_package_data=True,
     install_requires=REQUIRED,
-    extras_requires=EXTRAS,
+    extras_require=EXTRAS,
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',
