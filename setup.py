@@ -13,12 +13,8 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.1.0'
 
 REQUIRED = [
-    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy', 'matplotlib'
+    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy', 'matplotlib', 'mayavi'
 ]
-
-EXTRAS = {
-    'draw3d': ['mayavi'],
-}
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -49,7 +45,6 @@ setup(
     package_data={NAME: ['*_config.json']},
     include_package_data=True,
     install_requires=REQUIRED,
-    extras_require=EXTRAS,
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',
