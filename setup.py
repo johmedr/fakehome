@@ -13,7 +13,15 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.1.0'
 
 REQUIRED = [
-    'owlready2', 'tqdm', 'wget', 'networkx', 'numpy', 'scipy', 'matplotlib', 'mayavi'
+    'owlready2',
+    'tqdm',
+    'wget',
+    'networkx',
+    'numpy',
+    'scipy',
+    'matplotlib',
+    'mayavi',
+    'pygraviz'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
