@@ -26,13 +26,18 @@ def str2bool(v):
 DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), '.config', "hh_datasets_config.json")
 
+DEFAULT_DATASET_PATH = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), '..', '..', '.data')
+
 
 class HHDataset(DatasetObject):
 
     def __init__(
-            self, dataset_name, config_file=DEFAULT_CONFIG_FILE):
+            self, dataset_name, dataset_path=DEFAULT_DATASET_PATH, config_file=DEFAULT_CONFIG_FILE):
 
         self.dataset_name = dataset_name
+        self.dataset_path = dataset_path
+
         with open(config_file, 'r') as f:
             logger.debug("Reading json config file '%s'...", config_file)
             self.dataset_conf = json.load(f)
@@ -246,16 +251,16 @@ class HHDataset(DatasetObject):
         if tokens.group(6):
             act_tokens = self.activity_pattern.search(tokens.group(6))
 
-            extracted['activity'] = {
-                'name': act_tokens.group(1),
-                'type': self.activity_type_mapping(act_tokens.group(2)),
-                'state': None
-            }
-
             if act_tokens.group(3):
                 act_state = act_tokens.group(3).lower()
-                if act_state != "none":
-                    extracted['activity']['state'] = act_state
+            else:
+                act_state = None
+
+            extracted['activity'] = {
+                'name': act_tokens.group(1),
+                'type': self.activity_type_mapping(act_tokens.group(1)),
+                'state': self.activity_state_mapping(act_state)
+            }
 
         return extracted
 
@@ -286,7 +291,7 @@ class HHDataset(DatasetObject):
                 Returns the absolute path to the data file. 
         """
         return os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.data', self.dataset_conf['datapath']))
+            os.path.join(self.dataset_path, self.dataset_conf['datapath']))
 
     @property
     def name(self):

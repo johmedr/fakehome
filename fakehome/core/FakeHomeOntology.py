@@ -9,52 +9,52 @@ from .BaseOntology import *
 from .DatasetObject import DatasetObject
 
 
-class OntologyBuilder(object):
-    """docstring for OntologyBuilder"""
+class FakeHomeOntology(object):
+    """docstring for FakeHomeOntology"""
 
     def __init__(self, dataset):
-        super(OntologyBuilder, self).__init__()
+        super(FakeHomeOntology, self).__init__()
         if not isinstance(dataset, DatasetObject):
-            s = "The OntologyBuilder must be built from a DatasetObject. \
+            s = "The FakeHomeOntology must be built from a DatasetObject. \
                 Wrong type for 'dataset': %s" % (type(dataset),)
             logger.error(s)
             raise AttributeError(s)
 
-        self.dataset = dataset
+        self._dataset = dataset
 
         if logger.getEffectiveLevel() < logging.WARNING:
             print("Building ontology from dataset %s..." %
-                  (self.dataset.name,))
+                  (self._dataset.name,))
         else:
             print("Building ontology from dataset %s... " %
-                  (self.dataset.name,), end='')
+                  (self._dataset.name,), end='')
 
-        with open(self.dataset.filepath, 'r') as f:
-            self.file_length = len(f.readlines())
+        with open(self._dataset.filepath, 'r') as f:
+            self._file_length = len(f.readlines())
             logger.debug(
                 "Found %s lines in file %s",
-                self.file_length, self.dataset.filepath)
+                self._file_length, self._dataset.filepath)
 
-        self.working_ontology = get_ontology(os.path.join(
-            self.dataset.filepath, self.dataset.name + ".owl"))
+        self._working_ontology = get_ontology(os.path.join(
+            self._dataset.filepath, self._dataset.name + ".owl"))
 
-        with self.working_ontology:
+        with self._working_ontology:
             # Create the locations
-            self.locations = {
-                name: self.dataset.location_type_mapping(name)()
-                for name in self.dataset.location_list
+            self._locations = {
+                name: self._dataset.location_type_mapping(name)()
+                for name in self._dataset.location_list
             }
-            logger.debug("Found locations: %s", self.dataset.location_list)
+            logger.debug("Found locations: %s", self._dataset.location_list)
 
             # Create a sensor dictionnary
-            self.sensors = {}
+            self._sensors = {}
 
             for (loc, loc_instance) in tqdm(
-                    self.locations.items(), desc="Creating ontology", ascii=True):
+                    self._locations.items(), desc="Creating ontology", ascii=True):
                 # Create adjacency relationships between locations
                 try:
-                    for other in self.dataset.get_location_adjacency(loc):
-                        other_instance = self.locations[other]
+                    for other in self._dataset.get_location_adjacency(loc):
+                        other_instance = self._locations[other]
                         loc_instance.is_adjacent_to.append(other_instance)
                         other_instance.is_adjacent_to.append(loc_instance)
                 except KeyError as e:
@@ -64,12 +64,12 @@ class OntologyBuilder(object):
                     "Processed location adjacencies for location %s.", loc)
 
                 # Create sensors and attach them to location
-                for sensor in self.dataset.get_location_sensors(loc):
+                for sensor in self._dataset.get_location_sensors(loc):
                     # Raise an error if sensor already exist to avoid side
                     # # effects
-                    if sensor not in self.sensors.keys():
-                        self.sensors[sensor] = \
-                            self.dataset.sensor_name_mapping(
+                    if sensor not in self._sensors.keys():
+                        self._sensors[sensor] = \
+                            self._dataset.sensor_name_mapping(
                                 sensor)(
                                     name=sensor, has_location=loc_instance)
                     else:
@@ -78,17 +78,18 @@ class OntologyBuilder(object):
                         raise AssertionError(s)
                 logger.debug("Processed sensor creation for location %s.", loc)
 
-            print("Ok !")
             self.training_slice = None
+
+            print("Ok !")
 
     def read_data(self, window_size=-1, starting_line=0):
         logger.debug(
             "Reading slice [%s, %s] from dataset %s...", starting_line,
-            window_size if window_size != -1 else self.file_length,
-            self.dataset.name
+            window_size if window_size != -1 else self._file_length,
+            self._dataset.name
         )
 
-        with self.working_ontology:
+        with self._working_ontology:
             if self.training_slice is not None:
                 # TODO: What if window size == -1. Improve the mechanism
                 if starting_line == self.training_slice['start'] and starting_line + window_size == self.training_slice['stop']:
@@ -106,13 +107,13 @@ class OntologyBuilder(object):
             sensor_events = []
             activity_events = []
 
-            with open(self.dataset.filepath, 'r') as file:
+            with open(self._dataset.filepath, 'r') as file:
                 if window_size == -1:
                     lines = file.readlines()[starting_line:]
-                elif starting_line + window_size > self.file_length:
+                elif starting_line + window_size > self._file_length:
                     lines = file.readlines()[starting_line:]
                     raise Warning("Trying to read %d lines, but annotated data file contains %d lines." % (
-                        starting_line + window_size, self.file_length))
+                        starting_line + window_size, self._file_length))
                 else:
                     lines = file.readlines()[
                         starting_line:starting_line + window_size]
@@ -129,20 +130,20 @@ class OntologyBuilder(object):
                     dynamic_ncols=True
                 ):
                     try:
-                        event = self.dataset.apply_line_pattern(line)
+                        event = self._dataset.apply_line_pattern(line)
 
-                    except KeyError as e:
+                    except (KeyError, AttributeError) as e:
                         num_errors += 1
                         logger.debug(
                             "Get KeyError while attempting to read line %s of dataset %s. \
-                            Please check your dataset and line pattern.", idx, self.dataset.name)
+                            Please check your dataset and line pattern.", idx, self._dataset.name)
                         continue
 
                     # Add a new sensor measure to the sensor event list
                     try:
                         sensor_events.append(
                             Measure(
-                                is_measured_by=self.sensors[
+                                is_measured_by=self._sensors[
                                     event['sensor']['name']],
                                 value=event['sensor']['state'],
                                 timestamp=event['timestamp']
@@ -161,7 +162,7 @@ class OntologyBuilder(object):
                         # Assign the timestamp to the data property
                         # corresponding to the event, e.g. beginsAt
                         activity.__setattr__(
-                            activity_state.python_name, event['timestamp'])
+                            event['activity']['state'].python_name, event['timestamp'])
 
                         activity_events.append(activity)
                 print("Ok ! Read %s lines out of %s..." %
@@ -173,3 +174,15 @@ class OntologyBuilder(object):
         self.training_slice['activity_events'] = activity_events
 
         return self.training_slice
+
+    @property
+    def sensors(self):
+        return self._sensors
+
+    @property
+    def locations(self):
+        return self._locations
+
+    @property
+    def working_ontology(self):
+        return self._working_ontology
