@@ -84,13 +84,6 @@ class FakeHomeGraph(nx.Graph):
                                        for e in self._sensors_list + self._locations_list))
         self._F = len(self._features_list)
 
-        # One-hot coding of the location
-        self._locations_features = np.zeros(
-            (self._nlocations, self._F), dtype=np.float)
-        for i, loc in enumerate(self._locations_list):
-            j = self._features_list.index(type(loc))
-            self._locations_features[i, j] = 1.0
-
         super(FakeHomeGraph, self).__init__(self._adjacency, **attr)
 
         for idx, sensor in enumerate(self._sensors_list):
@@ -196,6 +189,13 @@ class FakeHomeGraph(nx.Graph):
 
         measures = events["sensor_events"]
         X = np.zeros((self._N, self._F, len(measures)), dtype=np.float)
+
+        # One-hot coding of the location
+        self._locations_features = np.zeros(
+            (self._nlocations, self._F), dtype=np.float)
+        for i, loc in enumerate(self._locations_list):
+            j = self._features_list.index(type(loc))
+            self._locations_features[i, j] = 1.0
 
         # The locations will remain unchanged during the process
         X[self._nsensors:, :, 0] = self._locations_features
