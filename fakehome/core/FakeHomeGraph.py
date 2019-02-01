@@ -84,6 +84,10 @@ class FakeHomeGraph(nx.Graph):
                                        for e in self._sensors_list + self._locations_list))
         self._F = len(self._features_list)
 
+        self._activities_list = list(set(self._ontology._dataset.activity_type_mapping(a)
+                                         for a in self._ontology.activities))
+        self._nactivities = len(self._activities_list)
+
         super(FakeHomeGraph, self).__init__(self._adjacency, **attr)
 
         for idx, sensor in enumerate(self._sensors_list):
@@ -214,9 +218,40 @@ class FakeHomeGraph(nx.Graph):
 
         return X
 
-    def read_data(self, window_size=-1, starting_line=0):
+    def events_to_activity_features(self, events):
+        if not isinstance(events, dict) or not 'sensor_events' in events.keys():
+            raise AttributeError()
+
+        measures = events["sensor_events"]
+        Y = np.zeros(len(measures), dtype=np.long)
+
+        print(self._ontology.activities)
+
+        for idx, measure in enumerate(measures):
+            activity_num = 0
+
+            if measure.occurs_with_activity is not None:
+                activity = measure.occurs_with_activity
+                if activity.begins_at is not None or activity.timestamp is not None:
+                    activity_num = self._activities_list.index(
+                        type(activity)) + 1
+                # Implicit :
+                # elif activity.ends_at is not None:
+                #     activity_num = 0
+            else:
+                if idx > 0:
+                    activity_num = Y[idx - 1]
+
+            Y[idx] = activity_num
+
+        return Y
+
+    def read_data(self, window_size=-1, starting_line=0, return_labels=False):
         events = self._ontology.read_data(window_size, starting_line)
-        return self.events_to_nodes_features(events)
+        if return_labels:
+            return self.events_to_nodes_features(events), self.events_to_activity_features(events)
+        else:
+            return self.events_to_nodes_features(events)
 
     @property
     def N(self):

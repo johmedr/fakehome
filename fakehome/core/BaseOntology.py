@@ -232,5 +232,8 @@ with baseOnto:
     class endsAt(Activity >> DATE_REPRESENTATION, FunctionalProperty):
         python_name = 'ends_at'
 
+    class occursWithActivity(Measure >> Activity, FunctionalProperty):
+        python_name = 'occurs_with_activity'
+
     class takesPlaceIn(Activity >> Location):
         pass

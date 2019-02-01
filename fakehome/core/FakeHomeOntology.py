@@ -141,14 +141,13 @@ class FakeHomeOntology(object):
 
                     # Add a new sensor measure to the sensor event list
                     try:
-                        sensor_events.append(
-                            Measure(
-                                is_measured_by=self._sensors[
-                                    event['sensor']['name']],
-                                value=event['sensor']['state'],
-                                timestamp=event['timestamp']
-                            )
+                        measure = Measure(
+                            is_measured_by=self._sensors[
+                                event['sensor']['name']],
+                            value=event['sensor']['state'],
+                            timestamp=event['timestamp']
                         )
+                        sensor_events.append(measure)
 
                     except KeyError as e:
                         num_errors += 1
@@ -164,7 +163,10 @@ class FakeHomeOntology(object):
                         activity.__setattr__(
                             event['activity']['state'].python_name, event['timestamp'])
 
+                        measure.occurs_with_activity = activity
+
                         activity_events.append(activity)
+
                 print("Ok ! Read %s lines out of %s..." %
                       (num_lines - num_errors, num_lines))
 
@@ -182,6 +184,10 @@ class FakeHomeOntology(object):
     @property
     def locations(self):
         return self._locations
+
+    @property
+    def activities(self):
+        return self._dataset.activity_list
 
     @property
     def working_ontology(self):
