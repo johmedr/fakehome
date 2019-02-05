@@ -204,6 +204,8 @@ class FakeHomeGraph(nx.Graph):
         # The locations will remain unchanged during the process
         X[self._nsensors:, :, 0] = self._locations_features
 
+        timevec = []
+
         for idx, measure in enumerate(measures):
             # Ensure temporal consistence
             if idx > 0:
@@ -216,7 +218,9 @@ class FakeHomeGraph(nx.Graph):
             j = self._features_list.index(feature)
             X[i, j, idx] = measure.value
 
-        return X
+            timevec.append(measure.timestamp)
+
+        return X, timevec
 
     def events_to_activity_features(self, events):
         if not isinstance(events, dict) or not 'sensor_events' in events.keys():
@@ -248,10 +252,11 @@ class FakeHomeGraph(nx.Graph):
 
     def read_data(self, window_size=-1, starting_line=0, return_labels=False):
         events = self._ontology.read_data(window_size, starting_line)
+        X, T = self.events_to_nodes_features(events)
         if return_labels:
-            return self.events_to_nodes_features(events), self.events_to_activity_features(events)
+            return T, X, self.events_to_activity_features(events)
         else:
-            return self.events_to_nodes_features(events)
+            return X
 
     @property
     def N(self):
