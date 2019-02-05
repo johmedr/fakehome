@@ -1,9 +1,9 @@
 from owlready2 import *
 
-DATE_REPRESENTATION = str
+# DATE_REPRESENTATION = str
 
-# import datetime
-# DATE_REPRESENTATION = datetime.datetime
+import datetime
+DATE_REPRESENTATION = datetime.datetime
 
 baseOnto = get_ontology("file://wsu_datasets/hh/BaseOntology.owl")
 

@@ -240,7 +240,8 @@ class HHDataset(DatasetObject):
         extracted = {}
         tokens = self.line_pattern.search(line)
 
-        extracted['timestamp'] = tokens.group(1)
+        extracted['timestamp'] = datetime.datetime.strptime(
+            tokens.group(1), '%Y-%m-%d %H:%M:%S.%f')
         extracted['sensor'] = {
             'name': '%s%s' % (tokens.group(2), tokens.group(3)),
             'type': self._sensor_type_mapping(tokens.group(2)),
